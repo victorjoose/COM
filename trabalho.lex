@@ -1,21 +1,21 @@
+%option noyywrap
 %{
 /* Para as funções atoi() e atof() */
 #include <math.h>
+void showError();
 %}
 
-/* ========================================================================== */
 /* ===========================  Sessão DEFINIÇÔES  ========================== */
-/* ========================================================================== */
 
-NUM     [0-9]
+NUM     [0-9]+
 ID      [a-z][a-z0-9]*
+
+/*
 int     []
 void    []
 if      []
 while   []
 return  []
-
-
 programa declaracao_lista
 declaracao_lista declaracao_lista declaracao | declaracao
 declaracao var_declaracao | fun_declaracao
@@ -45,46 +45,40 @@ fator (expressao) | var | ativacao | NUM
 ativacao ID(args)
 args args_lista | vazio
 args_lista
-
-
-%%
-
-{NUM}+    {
-				printf( "Um valor inteiro: %s (%d)\n", yytext,
-						  atoi( yytext ) );
-				}
-
-{NUM}+"."{NUM}*        {
-				printf( "Um valor real: %s (%g)\n", yytext,
-						  atof( yytext ) );
-				}
-
-if|then|begin|end|procedure|function        {
-				printf( "Uma palavra-chave: %s\n", yytext );
-				}
-
-{ID}        printf( "Um identificador: %s\n", yytext );
-
-"+"|"-"|"*"|"/"   printf( "Um operador: %s\n", yytext );
-
-"{"[^}\n]*"}"     /* Lembre-se... comentários não tem utilidade! */
-
-[ \t\n]+          /* Lembre-se... espaços em branco não tem utilidade! */
-
-.           printf( "Caracter não reconhecido: %s\n", yytext );
+*/
 
 %%
 
+{NUM}+                                       	{printf("Um valor inteiro: %s (%d)\n", yytext, atoi(yytext));}
 
+{NUM}+"."{NUM}*                           		{printf("Um valor real: %s (%g)\n", yytext, atof(yytext));}
+
+if|then|begin|end|procedure|function          {printf("Uma palavra-chave: %s\n", yytext);}
+
+{ID}                                          printf("Um identificador: %s\n", yytext);
+
+"+"|"-"                                 		  printf("Operador de soma: %s\n", yytext);
+"*"|"/"											                  printf("Operador de multiplicação: %s\n", yytext);
+"<="|"<"|">"|">="|"=="|"!="						        printf("Operador relacional: %s\n", yytext );
+
+"{"[^}\n]*"}"                                 /* comentários*/
+[ \t]+                                        /*espaços em branco*/
+.                                             printf( "Caracter não reconhecido: %s\n", yytext );
+
+%%
 
 int main(int argc, char **argv) {
 	++argv, --argc;
 	if (argc > 0) {
-        yyin = fopen( argv[0], "r" );
+    	yyin = fopen( argv[0], "r");
 	} else {
 		yyin = stdin;
-    }
-
+	}
+		
 	yylex();    
 	return 0;
+}
+
+void showError() {
+	printf("Caracter desconhecido");
 }

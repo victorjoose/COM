@@ -1,8 +1,5 @@
 #!/bin/bash
-flex --noyywrap 1o-exemplo.lex
-gcc lex.yy.c -lfl -o 1o-exemplo
-flex --noyywrap 2o-exemplo.lex
-gcc lex.yy.c -lfl -o 2o-exemplo
-flex --noyywrap oreily-ex.lex
-gcc lex.yy.c -lfl -o oreily-ex
-
+#flex --noyywrap 2o-exemplo.lex
+#gcc lex.yy.c -lfl -o 2o-exemplo
+flex --noyywrap trabalho.lex
+gcc lex.yy.c -lfl -o trabalho
