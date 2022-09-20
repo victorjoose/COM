@@ -1,0 +1,3 @@
+#!/bin/bash
+flex --noyywrap 2o-exemplo.lex
+gcc lex.yy.c -lfl -o 2o-exemplo
