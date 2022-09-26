@@ -2,64 +2,38 @@
 %{
 /* Para as funções atoi() e atof() */
 #include <math.h>
+#include <ctype.h>
 void showError();
+void valorInteiro();
+void valorReal();
+void palavraChave();
+void identificador();
 %}
 
-/* ===========================  Sessão DEFINIÇÔES  ========================== */
+/* Sessão DEFINIÇÔES   */
 
-NUM     [0-9]+
 ID      [a-z][a-z0-9]*
-
-/*
+NUM     [0-9]+
 int     []
 void    []
 if      []
 while   []
 return  []
-programa declaracao_lista
-declaracao_lista declaracao_lista declaracao | declaracao
-declaracao var_declaracao | fun_declaracao
-var_declaracao tipo_especificador ID; | tipo_especificador ID[NUM]
-tipo_especificador int | void
-fun_declaracao tipo_especificador ID(params) composto_decl
-params params_lista | void
-params_lista params_lista, param | param
-param tipo_especificador ID | tipo_especificador ID[]
-composto_decl {local_declaracoes statement_lista}
-local_declaracoes local_declaracoes var_declaracao | vazio
-statement_lista local_declaracoes var_declaracao | vazio
-statement expressao_decl | composto_decl | selecao_decl | iteracao_decl | retorno_decl
-expressao_decl expressao; | ;
-selecao_decl if(expressao) statement | if(expressao) statement else statement
-iteracao_decl while(expressao) statement
-retorno_decl return; | return expressao;
-expressao var = expressao | expressao_simples
-var ID | ID[expressao]
-simples_expressao ID | ID[expressao]
-relacional <=|<|>|>=|==|!=
-soma_expressao soma_expressao relacional soma_expressao | soma_expressao
-soma + | -
-termo termo mult fator | fator
-mult * | /
-fator (expressao) | var | ativacao | NUM
-ativacao ID(args)
-args args_lista | vazio
-args_lista
-*/
+
 
 %%
 
-{NUM}+                                       	{printf("Um valor inteiro: %s (%d)\n", yytext, atoi(yytext));}
+{NUM}+                                       {valorInteiro();}
 
-{NUM}+"."{NUM}*                           		{printf("Um valor real: %s (%g)\n", yytext, atof(yytext));}
+{NUM}+"."{NUM}*                           	 {valorReal();}
 
-if|then|begin|end|procedure|function          {printf("Uma palavra-chave: %s\n", yytext);}
+if|then|begin|end|procedure|function         {palavraChave();}
 
-{ID}                                          printf("Um identificador: %s\n", yytext);
+{ID}                                         {identificador();}
 
-"+"|"-"                                 		  printf("Operador de soma: %s\n", yytext);
-"*"|"/"											                  printf("Operador de multiplicação: %s\n", yytext);
-"<="|"<"|">"|">="|"=="|"!="						        printf("Operador relacional: %s\n", yytext );
+"+"|"-"                                 	printf("Operador de soma: %s\n", yytext);
+"*"|"/"										printf("Operador de multiplicação: %s\n", yytext);
+"<="|"<"|">"|">="|"=="|"!="					printf("Operador relacional: %s\n", yytext );
 
 "{"[^}\n]*"}"                                 /* comentários*/
 [ \t]+                                        /*espaços em branco*/
@@ -77,6 +51,36 @@ int main(int argc, char **argv) {
 		
 	yylex();    
 	return 0;
+}
+
+void valorInteiro() {
+
+	int len;
+	len = strlen(yytext);
+
+	for(int i=0; i<=len; i++) {
+		if(!isdigit(yytext[i])) {
+			printf("identificador dentro do numero");
+			printf("Um identificador: %s\n", yytext);
+			return;
+		}
+	}
+	
+	printf("Um valor inteiro: %s (%d)\n", yytext, atoi(yytext));
+
+}
+
+void valorReal() {
+	printf("Um valor real: %s (%g)\n", yytext, atof(yytext));
+}
+
+void palavraChave() {
+	printf("Uma palavra-chave: %s\n", yytext);
+}
+
+void identificador() {
+	printf("identificador de verdade");
+	printf("Um identificador: %s\n", yytext);
 }
 
 void showError() {

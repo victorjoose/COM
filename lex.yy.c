@@ -481,46 +481,15 @@ char *yytext;
 #line 3 "trabalho.lex"
 /* Para as funções atoi() e atof() */
 #include <math.h>
+#include <ctype.h>
 void showError();
-#line 486 "lex.yy.c"
-/* ===========================  Sessão DEFINIÇÔES  ========================== */
-/*
-int     []
-void    []
-if      []
-while   []
-return  []
-programa declaracao_lista
-declaracao_lista declaracao_lista declaracao | declaracao
-declaracao var_declaracao | fun_declaracao
-var_declaracao tipo_especificador ID; | tipo_especificador ID[NUM]
-tipo_especificador int | void
-fun_declaracao tipo_especificador ID(params) composto_decl
-params params_lista | void
-params_lista params_lista, param | param
-param tipo_especificador ID | tipo_especificador ID[]
-composto_decl {local_declaracoes statement_lista}
-local_declaracoes local_declaracoes var_declaracao | vazio
-statement_lista local_declaracoes var_declaracao | vazio
-statement expressao_decl | composto_decl | selecao_decl | iteracao_decl | retorno_decl
-expressao_decl expressao; | ;
-selecao_decl if(expressao) statement | if(expressao) statement else statement
-iteracao_decl while(expressao) statement
-retorno_decl return; | return expressao;
-expressao var = expressao | expressao_simples
-var ID | ID[expressao]
-simples_expressao ID | ID[expressao]
-relacional <=|<|>|>=|==|!=
-soma_expressao soma_expressao relacional soma_expressao | soma_expressao
-soma + | -
-termo termo mult fator | fator
-mult * | /
-fator (expressao) | var | ativacao | NUM
-ativacao ID(args)
-args args_lista | vazio
-args_lista
-*/
-#line 524 "lex.yy.c"
+void valorInteiro();
+void valorReal();
+void palavraChave();
+void identificador();
+#line 491 "lex.yy.c"
+/* Sessão DEFINIÇÔES   */
+#line 493 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -737,10 +706,10 @@ YY_DECL
 		}
 
 	{
-#line 50 "trabalho.lex"
+#line 24 "trabalho.lex"
 
 
-#line 744 "lex.yy.c"
+#line 713 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -799,60 +768,60 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 52 "trabalho.lex"
-{printf("Um valor inteiro: %s (%d)\n", yytext, atoi(yytext));}
+#line 26 "trabalho.lex"
+{valorInteiro();}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 54 "trabalho.lex"
-{printf("Um valor real: %s (%g)\n", yytext, atof(yytext));}
+#line 28 "trabalho.lex"
+{valorReal();}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 56 "trabalho.lex"
-{printf("Uma palavra-chave: %s\n", yytext);}
+#line 30 "trabalho.lex"
+{palavraChave();}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 58 "trabalho.lex"
-printf("Um identificador: %s\n", yytext);
+#line 32 "trabalho.lex"
+{identificador();}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 60 "trabalho.lex"
+#line 34 "trabalho.lex"
 printf("Operador de soma: %s\n", yytext);
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 61 "trabalho.lex"
+#line 35 "trabalho.lex"
 printf("Operador de multiplicação: %s\n", yytext);
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 62 "trabalho.lex"
+#line 36 "trabalho.lex"
 printf("Operador relacional: %s\n", yytext );
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 64 "trabalho.lex"
+#line 38 "trabalho.lex"
 /* comentários*/
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 65 "trabalho.lex"
+#line 39 "trabalho.lex"
 /*espaços em branco*/
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 66 "trabalho.lex"
+#line 40 "trabalho.lex"
 printf( "Caracter não reconhecido: %s\n", yytext );
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 68 "trabalho.lex"
+#line 42 "trabalho.lex"
 ECHO;
 	YY_BREAK
-#line 856 "lex.yy.c"
+#line 825 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1857,7 +1826,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 68 "trabalho.lex"
+#line 42 "trabalho.lex"
 
 
 int main(int argc, char **argv) {
@@ -1870,6 +1839,36 @@ int main(int argc, char **argv) {
 		
 	yylex();    
 	return 0;
+}
+
+void valorInteiro() {
+
+	int len;
+	len = strlen(yytext);
+
+	for(int i=0; i<=len; i++) {
+		if(!isdigit(yytext[i])) {
+			printf("identificador dentro do numero");
+			printf("Um identificador: %s\n", yytext);
+			return;
+		}
+	}
+	
+	printf("Um valor inteiro: %s (%d)\n", yytext, atoi(yytext));
+
+}
+
+void valorReal() {
+	printf("Um valor real: %s (%g)\n", yytext, atof(yytext));
+}
+
+void palavraChave() {
+	printf("Uma palavra-chave: %s\n", yytext);
+}
+
+void identificador() {
+	printf("identificador de verdade");
+	printf("Um identificador: %s\n", yytext);
 }
 
 void showError() {
